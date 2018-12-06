@@ -1,0 +1,32 @@
+﻿@model IEnumerable<InstaSharp.Data.Models.Notification>
+
+@{
+    ViewBag.Title = "Notifications";
+}
+
+<div class="inner-wrapper">
+    @if (Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <div class="post tight">
+                <div class="post__top">
+                    <a href="@Url.Action("Details", "Profile", new { @id = item.FromUser.UserName })">
+                        <img src="@Url.Content(String.Format("~/Images/{0}", item.FromUser.GetPhoto()))" />
+                    </a>
+                    <a href="@Url.Action("Details", "Profile", new { @id = item.FromUser.UserName })" class="post__user">
+                        @item.FromUser.UserName
+                    </a>
+                    <time title="@item.Timestamp.ToString("D")">@item.Timestamp.ToString().FriendlyDate()</time>
+
+                    <p class="message">@item.Message</p>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Nothing to see here.</p>
+    }
+</div>
+

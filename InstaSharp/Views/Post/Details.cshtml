@@ -1,0 +1,42 @@
+﻿@model Post
+
+@{
+    ViewBag.Title = "Details";
+
+    var likedModel = Model.Likes.FirstOrDefault(l => l.User.UserName == User.Identity.Name) != null;
+}
+
+<div class="wrapper">
+    <div class="post">
+        <div class="post__left">
+            <img src="@Url.Content(String.Format("~/Images/Uploads/{0}/{1}", Model.User.UserName, Model.Image))" />
+        </div>
+        <div class="post__right">
+            <div class="post__top">
+                <a href="@Url.Action("Details", "Profile", new { @id = Model.User.UserName })">
+                    <img src="@Url.Content(String.Format("~/Images/{0}", Model.User.GetPhoto()))" />
+                </a>
+                <a href="@Url.Action("Details", "Profile", new { @id = Model.User.UserName })" class="post__user">
+                    @Model.User.UserName
+                </a>
+
+                <time title="@Model.Timestamp.ToString("D")">@Model.Timestamp.ToString().FriendlyDate()</time>
+            </div>
+
+            <div class="post__bottom">
+                <div class="post__likes">
+                    <button class="like-button @(likedModel ? "liked" : String.Empty) link" data-post-id="@Model.Id">
+                        <i class="fa fa-heart-o"></i>
+                    </button>
+                    <strong><span class="num-likes">@Model.Likes.Count()</span> likes</strong>
+                </div>
+
+                <p class="post__meta">@Html.Raw(Model.Description.IncludeHashtags())</p>
+
+                @Html.Partial("~/Views/Post/_Comments.cshtml", Model.Comments)
+
+                @Html.Partial("~/Views/Post/_AddComment.cshtml", Model)
+            </div>
+        </div>
+    </div>
+</div>
